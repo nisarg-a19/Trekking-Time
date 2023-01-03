@@ -1,0 +1,210 @@
+//har har mahadev
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long int
+#define p pair
+#define pll pair<ll,ll>
+#define vpll vector<pair<ll,ll>>
+#define ull unsigned long long int
+#define vll vector<ll>
+#define vvll vector<vector<ll>>
+#define rep(i,a,b) for(i=a;i<=b;i++)
+#define repr(i,a,b) for(i=a;i>=b;i--)
+#define all(v) v.begin() , v.end()
+#define rall(v) v.rbegin(),v.rend()
+#define ff first
+#define ss second
+#define pb push_back
+typedef unsigned long long int ulli;
+template<typename T> istream& operator>>(istream& in, vector<T>& a) {for (auto &x : a) in >> x; return in;};
+template<typename T> ostream& operator<<(ostream& out, vector<T>& a) {for (auto &x : a) out << x << ' '; return out;};
+
+template<typename T1, typename T2> ostream& operator<<(ostream& out, const p<T1, T2>& x) {return out << x.ff << ' ' << x.ss;}
+template<typename T1, typename T2> istream& operator>>(istream& in, p<T1, T2>& x) {return in >> x.ff >> x.ss;}
+
+ll powermod(ll a, ll b, ll m)
+{
+    if (b == 0) return 1;
+    ull k = powermod(a, b / 2, m);
+    k = k * k;
+    k %= m;
+    if (b & 1) k = (k * a) % m;
+    return k;
+}
+ll inverse(ll b, ll mod) {
+    return powermod(b, mod - 2, mod);
+}
+// nCr with modulus
+long long int mod = 998244353;
+// ll factorial(ll n, ll r){
+//     if(r==0||r==n) return 1;
+
+//     // dp[n][r]=
+//     return (factorial (n-1,r,dp)%mod + factorial (n-1,r-1,dp)%mod)%mod;
+
+// }
+ll kadane( vll arr, ll n) {
+
+    ll max_end = 0;
+    ll mx = 0;
+
+    for (ll i = 0; i < n; i++) {
+        max_end += arr[i];
+        if (mx < max_end) {
+            mx = max_end;
+        }
+        if (max_end < 0) {
+            max_end = 0;
+        }
+    }
+    return mx;
+}
+// Prime test for large numbers
+
+bool isPrime(ull n, int iter = 10)
+{
+    if (n < 4) return n == 2 || n == 3;
+    if (n % 2 == 0 || n % 3 == 0) return false;
+    for (int i = 0; i < iter; i++)
+    {
+        ull a = 2 + rand() % (n - 3);
+        if (powermod(a, n - 1, n) != 1) return false;
+    }
+    return true;
+}
+bool isval(int i, int j, int n, int m) {
+    if (i < 0 || j < 0 || i >= n || j >= m) return false;
+    return true;
+}
+void dfs(ll node, vvll &adj, vll &vis) {
+    vis[node] = 1;
+    for (auto it : adj[node]) {
+        if (vis[node] == 0) dfs(node, adj, vis);
+    }
+}
+
+
+// vll sieve(ll n)
+// {
+
+
+
+//     prime[0] = 0;
+//     prime[1] = 0;
+//     ll m = sqrt(n);
+
+//     for (ll p = 2; p <= m; p++)
+//     {
+
+//         //
+//         if (prime[p]==-1)
+//         {
+
+//             for (ll i = p * 2; i <= n; i += p)
+//                 prime[i] = i;
+
+//         }
+//     }
+//     vll ans;
+//     for(ll i=2;i<=n;i++){
+//         if(prime[i]==-1) ans.pb(i);
+//     }
+//     return ans;
+
+
+// }
+ll findLowerBound(vector<pair<ll, ll> >& arr,
+                  pair<ll, ll>& p1)
+{
+    // Given iterator points to the
+    // lower_bound() of given pair
+    auto low = upper_bound(arr.begin(), arr.end(), p1);
+
+    return low - arr.begin();
+}
+ll maxvec(vll &v) {
+    ll mx  = LLONG_MIN;
+    ll i;
+    rep(i, 0, v.size() - 1) mx = max(v[i], mx);
+    return mx;
+}
+ll minvec(vll &v) {
+    ll mn  = LLONG_MAX;
+    ll i;
+    rep(i, 0, v.size() - 1) mn = min(v[i], mn);
+    return mn;
+}
+ll sumvec(vll &v) {
+    ll sum = 0;
+    ll i;
+    rep(i, 0, v.size() - 1) sum += v[i];
+    return sum;
+}
+ll func(ll i, ll j) {
+    if (i % j == 0) return i / j;
+    return (i / j) + 1;
+}
+bool ok = true;
+char help(char a, char b) {
+    for (ll i = 0; i < 26; i++) {
+        if (i + 'a' != a && i + 'a' != b) return i + 'a';
+    }
+}
+
+
+ll help(ll i, ll j, char x, vector<vector<char>>&v, vector<vector<char>>&tmp, vvll&vis, ll n, ll m) {
+    if (i < 0 || j < 0 || i >= n || j >= m || vis[i][j] || tmp[i][j] - x > 1) return LLONG_MAX / 2;
+    if (v[i][j] == 'E') return 0;
+
+    vis[i][j] = 1;
+    ll ans = 1 + help(i + 1, j, tmp[i][j], v, tmp, vis, n, m);
+    ans = min(ans, 1 + help(i, j + 1, tmp[i][j], v, tmp, vis, n, m));
+    ans = min(ans, 1 + help(i, j - 1, tmp[i][j], v, tmp, vis, n, m));
+    ans = min(ans, 1 + help(i - 1, j, tmp[i][j], v, tmp, vis, n, m));
+    vis[i][j] = 0;
+    return ans;
+}
+void yahapekrege() {
+    ll n, m;
+    cin >> n >> m;
+    vector<vector<char>>v(n, vector<char>(m));
+    for (ll i = 0; i < n; i++) cin >> v[i];
+    queue<vll>q;
+    vvll vis(n, vll (m, 0));
+    vector<vector<char>>tmp = v;
+
+    ll x, y;
+    for (ll i = 0; i < n; i++) {
+        for (ll j = 0; j < m; j++) {
+            if (v[i][j] == 'E') {
+                tmp[i][j] = 'z';
+
+            }
+            if (v[i][j] == 'S') {
+                x = i, y = j;
+                tmp[i][j] = 'a';
+            }
+        }
+    }
+    // cout << x << " " << y;
+    cout << help(x, y, 'a', v, tmp, vis, n, m);
+
+
+}
+int32_t main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    // int t;
+    // cin >> t;
+    // int a = 1;
+    // while (t--) {
+    // cout<<"Case #"<<a<<": ";
+
+    yahapekrege();
+    // a++;
+    cout << endl;
+    // }
+    return 0;
+}
